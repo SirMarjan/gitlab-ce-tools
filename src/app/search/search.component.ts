@@ -24,6 +24,7 @@ import {
 import { SearchResultsView } from '../settings/settings';
 import { HistoryStoreService } from '../core/services/history-store/history-store.service';
 import { ElectronIpcService } from '../core/services/ipc/electron-ipc.service';
+import { ExportService } from '../core/services/export/export.service';
 
 enum ProjectsSearchType {
     ALL = 'ALL',
@@ -92,7 +93,8 @@ export class SearchComponent implements OnInit, OnDestroy {
         private formBuilder: FormBuilder,
         private modalService: ModalService,
         private settingsService: SettingsService,
-        private electronIpcService: ElectronIpcService
+        private electronIpcService: ElectronIpcService,
+        private exportService: ExportService
     ) {
         this.projectsSearchTypeSubscription = this.subscribeToProjectsToSearch();
     }
@@ -154,6 +156,10 @@ export class SearchComponent implements OnInit, OnDestroy {
         );
 
         this.addToSearchHistory(this.searchTerms.searchText);
+    }
+
+    export() {
+        this.exportService.export(this.searchResults);
     }
 
     private addToSearchHistory(text: string) {
