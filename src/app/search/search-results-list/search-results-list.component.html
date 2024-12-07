@@ -7,6 +7,10 @@
         <clr-icon shape="minus"></clr-icon>
         Collapse all
     </button>
+    <button type="button" class="btn btn-link btn-sm" (click)="exportCsv()">
+        <clr-icon shape="download"></clr-icon>
+        Export CSV
+    </button>
     <button type="button" class="btn btn-link btn-sm" (click)="clearHidden()" *ngIf="isAnyResultHidden">
         <clr-icon shape="eye-hide"></clr-icon>
         Reset hidden results

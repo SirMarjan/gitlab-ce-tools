@@ -3,6 +3,7 @@ import { asyncScheduler, Observable, of, scheduled } from 'rxjs';
 import { Project } from 'src/app/core/services/gitlab-api/models/project';
 import { FileInProject } from './file-in-project';
 import { FileTreeLeaf } from './tree/file-tree-leaf';
+import { nullSafeIsEquivalent } from '@angular/compiler/src/output/output_ast';
 
 @Component({
     selector: 'app-search-results-list',
@@ -22,6 +23,9 @@ export class SearchResultsListComponent {
 
     @Output()
     fileSelected = new EventEmitter<FileInProject>();
+
+    @Output()
+    export = new EventEmitter<unknown>();
 
     isAnyResultHidden = false;
 
@@ -83,6 +87,10 @@ export class SearchResultsListComponent {
         this.searchResults.forEach(leaf => this.clearTreeHiddenFlag(leaf));
         this.isAnyResultHidden = false;
         this.updateHitsSummary(this._searchResults);
+    }
+
+    exportCsv() {
+        this.export.emit(null);
     }
 
     private setTreeExpanded(leaf: FileTreeLeaf, expanded: boolean): void {
