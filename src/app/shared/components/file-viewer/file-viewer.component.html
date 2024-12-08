@@ -2,12 +2,29 @@
     <h3 class="modal-title">
         <app-path-text [path]="filename"></app-path-text>
         <div class="file-viewer-menu">
-            <div class="btn-group btn-outline-primary btn-icon btn-sm">
+            <div *ngIf="!toolboxIntegration" class="btn-group btn-outline-primary btn-icon btn-sm">
                 <button class="btn" (click)="openInWebBrowser()">
+                    Open in browser
                     <clr-icon shape="pop-out"></clr-icon>
-                    <span class="clr-icon-title">Open in Web Browser</span>
                 </button>
             </div>
+            <clr-dropdown *ngIf="toolboxIntegration" >
+                <button class="dropdown-toggle btn btn-outline btn-sm" type="button" clrDropdownTrigger>
+                    Open
+                    <cds-icon shape="angle" direction="down"></cds-icon>
+                </button>
+                <clr-dropdown-menu *clrIfOpen>
+                    <button class="btn" (click)="openInWebBrowser()" clrDropdownItem>
+                        <span>Open in browser</span>
+                    </button>
+                    <button class="btn" (click)="cloneOrOpenProjectInIde()" clrDropdownItem>
+                        <span >Open or clone project (JetBrains)</span>
+                    </button>
+                    <button class="btn" (click)="openFileInIde()" clrDropdownItem>
+                        <span>Open file (JetBrains)</span>
+                    </button>
+                </clr-dropdown-menu>
+            </clr-dropdown>
         </div>
         <div class="jump-lines-icons" *ngIf="highlightedRanges.length > 0">
             <span class="jump-counter">{{jumpedToLineIndex + 1}} of {{highlightedRanges.length}}</span>
@@ -42,3 +59,4 @@
                   [disabled]="true" [config]="aceConfig"></ace>
     </div>
 </clr-modal>
+
