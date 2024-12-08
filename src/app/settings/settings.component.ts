@@ -37,6 +37,10 @@ export class SettingsComponent extends Modal<any> implements OnInit, OnDestroy {
         }),
         electron: this.formBuilder.group({
             enableUnsafeRequests: [false]
+        }),
+        integration: this.formBuilder.group({
+            enableJbToolboxIntegration: [false],
+            jbIdeName: ['idea', [Validators.required]]
         })
     });
 

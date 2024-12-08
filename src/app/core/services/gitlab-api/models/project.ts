@@ -7,4 +7,5 @@ export interface Project {
     name_with_namespace: string;
     path_with_namespace: string;
     web_url: string;
+    ssh_url_to_repo: string;
 }

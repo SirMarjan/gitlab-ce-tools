@@ -7,6 +7,7 @@ import { Project } from 'src/app/core/services/gitlab-api/models/project';
 import { SettingsService } from 'src/app/settings/settings.service';
 import { Range } from 'brace';
 import { GitlabWwwService } from 'src/app/core/services/gitlab-web/gitlab-www.service';
+import { JbToolboxService } from 'src/app/core/services/ide/jb-toolbox-service';
 
 import 'brace';
 import 'brace/mode/javascript';
@@ -23,6 +24,7 @@ import 'brace/mode/properties';
 import 'brace/mode/text';
 import 'brace/theme/chrome';
 import 'brace/ext/searchbox';
+
 
 @Component({
     selector: 'app-file-viewer',
@@ -58,13 +60,16 @@ export class FileViewerComponent extends Modal<FileViewerInitData> implements On
     highlightLanguage: string;
     textToHighlight: string;
     fileLoaded = false;
+    aceInitialized = false;
     error: any;
 
     highlightedRanges: Range[] = [];
     jumpedToLineIndex = -1;
 
+    toolboxIntegration = true;
+
     constructor(private filesApiService: FilesApiService, private settingsService: SettingsService,
-        private gitlabWwwService: GitlabWwwService) {
+        private gitlabWwwService: GitlabWwwService, private jbToolboxService: JbToolboxService) {
         super();
     }
 
@@ -75,6 +80,7 @@ export class FileViewerComponent extends Modal<FileViewerInitData> implements On
         this.filename = initData.filename;
         this.textToHighlight = initData.textToHighlight;
         this.fullScreen = settings.fileViewer.fullScreen;
+        this.toolboxIntegration = settings.integration.enableJbToolboxIntegration;
 
         this.aceConfig = {
             wrap: settings.fileViewer.wrapLines
@@ -110,11 +116,17 @@ export class FileViewerComponent extends Modal<FileViewerInitData> implements On
     }
 
     openInWebBrowser() {
-        let line = this.ace.directiveRef.ace().getCursorPosition()?.row;
-        if (line !== undefined || line !== null) {
-            line += 1;
-        }
-        this.gitlabWwwService.openFile(this.project, this.filename, line);
+        const {row} = this.provideCoursorPositon() ?? {};
+        this.gitlabWwwService.openFile(this.project, this.filename, row);
+    }
+
+    cloneOrOpenProjectInIde() {
+        this.jbToolboxService.cloneOrOpenProjectInIde(this.project);
+    }
+
+    openFileInIde() {
+        const {row, column} = this.provideCoursorPositon() ?? {};
+        this.jbToolboxService.openFileInIde(this.project, this.filename, row, column);
     }
 
     private goToHighlight(index: number): void {
@@ -141,6 +153,7 @@ export class FileViewerComponent extends Modal<FileViewerInitData> implements On
             if (this.highlightedRanges.length > 0) {
                 this.goToNextHighlight();
             }
+            this.aceInitialized = true;
         });
     }
 
@@ -151,5 +164,10 @@ export class FileViewerComponent extends Modal<FileViewerInitData> implements On
 
     private decodeContent(content: string): string {
         return decodeURIComponent(escape(atob(content)));
+    }
+
+    private provideCoursorPositon(): {row: number; column: number} | undefined {
+        const position = this.aceInitialized ? this.ace?.directiveRef?.ace()?.getCursorPosition() : undefined ;
+        return position;
     }
 }

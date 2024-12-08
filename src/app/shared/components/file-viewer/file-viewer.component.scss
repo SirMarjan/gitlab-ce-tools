@@ -61,6 +61,10 @@ app-path-text {
 .file-viewer-menu {
     position: absolute;
     line-height: 0;
+
+    clr-dropdown-menu {
+        line-height: initial;
+    }
 }
 
 .jump-lines-icons {

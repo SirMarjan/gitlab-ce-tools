@@ -123,6 +123,29 @@
                         </div>
                     </clr-tab-content>
                 </clr-tab>
+                <clr-tab>
+                    <button clrTabLink>Integrations</button>
+                    <clr-tab-content *clrIfActive>
+                        <div formGroupName="integration">
+                            <clr-checkbox-wrapper>
+                                <input clrCheckbox type="checkbox" formControlName="enableJbToolboxIntegration" />
+                                <label>Enable JetBrains Toolbox integration
+                                    <clr-tooltip>
+                                        <cds-icon clrTooltipTrigger role="img" shape="info-circle" size="24"></cds-icon>
+                                        <clr-tooltip-content *clrIfOpen clrSize="sm" clrPosition="bottom">
+                                            <span>Required Toolbox and IDE installed. New options available in file view</span>
+                                        </clr-tooltip-content>
+                                    </clr-tooltip>
+                                </label>
+                            </clr-checkbox-wrapper>
+                            <clr-input-container>
+                                <label>JetBrains IDE</label>
+                                <input clrInput type="text" formControlName="jbIdeName" size="20"/>
+                                <clr-control-error>Value is required!</clr-control-error>
+                            </clr-input-container>
+                        </div>
+                    </clr-tab-content>
+                </clr-tab>
             </clr-tabs>
         </div>
         <div class="modal-footer">

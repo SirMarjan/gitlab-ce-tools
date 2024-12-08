@@ -1,22 +1,21 @@
 import { Injectable } from '@angular/core';
 import { Project } from '../gitlab-api/models/project';
+import { NavigationService } from '../navigation-service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class GitlabWwwService {
 
-    public openFile(project: Project, file_with_path: string, line?: number): void {
-        let url = `${project.web_url}/-/blob/${project.default_branch}/${file_with_path}`;
-        if (line !== undefined && line !== null) {
-            url += `#L${line}`;
-        }
-        this.openNewWindow(new URL(url));
+    constructor(private navigationService: NavigationService) {
     }
 
-
-    private openNewWindow(url: URL): void {
-        window.open(url, '_blank');
+    public openFile(project: Project, file_with_path: string, lineIndex?: number): void {
+        let url = `${project.web_url}/-/blob/${project.default_branch}/${file_with_path}`;
+        if (lineIndex !== undefined && lineIndex !== null) {
+            url += `#L${lineIndex + 1}`;
+        }
+        this.navigationService.openInNewWindow(new URL(url));
     }
 
 }

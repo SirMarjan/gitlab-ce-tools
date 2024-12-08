@@ -2,6 +2,7 @@ export interface Settings {
     fileViewer: FileViewerSettings;
     search: SearchSettings;
     electron: ElectronSettings;
+    integration: ExperimentalSettings;
 }
 
 export interface FileViewerSettings {
@@ -29,6 +30,11 @@ export interface ElectronSettings {
     enableUnsafeRequests: boolean;
 }
 
+export interface ExperimentalSettings {
+    enableJbToolboxIntegration: boolean;
+    jbIdeName: string;
+}
+
 export type SearchResultsView = 'FLAT' | 'TREE' | 'COMPACT_TREE';
 
 export function getDefaultSettings(): Settings {
@@ -54,6 +60,10 @@ export function getDefaultSettings(): Settings {
         },
         electron: {
             enableUnsafeRequests: false
+        },
+        integration: {
+            enableJbToolboxIntegration: false,
+            jbIdeName: 'idea'
         }
     };
 }
